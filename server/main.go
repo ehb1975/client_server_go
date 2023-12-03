@@ -1,9 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"net/http"
-
 	"github.com/ehb1975/client_server_go/server/handlers"
 	"github.com/ehb1975/client_server_go/server/infrastructure"
 	"github.com/ehb1975/client_server_go/server/repository"
@@ -44,11 +41,12 @@ func main() {
 
 	cotacaoHandler := handlers.NewCotacaoHandler(cotacaoService)
 
-	app.Get("/", cotacaoHandler.Insert)
+	app.Get("/cotacao", cotacaoHandler.Insert)
 	app.Listen(":8080")
 
 }
 
+/*
 func BuscaCotacaoHandler(w http.ResponseWriter, r *http.Request) {
 
 	if r.URL.Path != "/" {
@@ -72,3 +70,4 @@ func BuscaCotacaoHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(cotacao)
 }
+*/
