@@ -1,4 +1,4 @@
-module github.com/ehb1975/client_server_go
+module client_server_go
 
 go 1.20
 
