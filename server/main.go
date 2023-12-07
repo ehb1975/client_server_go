@@ -79,7 +79,7 @@ func BuscaCotacaoHandler(w http.ResponseWriter, r *http.Request) {
 
 func Insert(ctx context.Context, cotacao *Cotacao) error {
 
-	ctx, cancel := context.WithTimeout(ctx, 100*time.Millisecond)
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Millisecond)
 	defer cancel()
 
 	db, err := sql.Open("sqlite3", "cotacao.db")
@@ -115,7 +115,7 @@ func Insert(ctx context.Context, cotacao *Cotacao) error {
 
 func BuscaCotacao(ctx context.Context) (*Cotacao, error) {
 
-	ctx, cancel := context.WithTimeout(ctx, 300*time.Millisecond)
+	ctx, cancel := context.WithTimeout(ctx, 200*time.Millisecond)
 	defer cancel()
 
 	req, err := http.NewRequestWithContext(ctx, "GET", "https://economia.awesomeapi.com.br/json/last/USD-BRL", nil)
