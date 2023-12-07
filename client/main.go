@@ -3,17 +3,19 @@ package main
 import (
 	"context"
 	"io"
+	"log"
 	"net/http"
-	"strconv"
+	"os"
 	"time"
 )
 
 func main() {
-	ctx, cancel := context.WithTimeout(context.Background(), 500*time.Millisecond)
+	ctx, cancel := context.WithTimeout(context.Background(), 3000*time.Millisecond)
 	defer cancel()
 
 	bid, err := getBid(ctx)
 	if err != nil {
+		log.Printf("Erro getBid")
 		panic(err)
 	}
 
@@ -23,24 +25,39 @@ func main() {
 	}
 }
 
-func getBid(ctx context.Context) (float64, error) {
+func saveBidToFile(bid string) error {
+	file, err := os.Create("cotacao.txt")
+	if err != nil {
+		return err
+	}
+
+	_, err = file.WriteString("Dollar: " + bid)
+	if err != nil {
+		return err
+	}
+	file.Close()
+	return nil
+}
+
+func getBid(ctx context.Context) (string, error) {
 	r, err := http.NewRequestWithContext(ctx, "GET", "http://localhost:8080/cotacao", nil)
 	if err != nil {
-		return 0.0, err
+		log.Println("Erro NewRequest")
+		return "", err
 	}
 
 	res, err := http.DefaultClient.Do(r)
 	if err != nil {
-		return 0.0, err
+		log.Println("Erro do")
+		return "", err
 	}
 	defer res.Body.Close()
 
 	bid, err := io.ReadAll(res.Body)
 	if err != nil {
-		return 0.0, err
+		log.Println("Erro ReadAll")
+		return "", err
 	}
 
-	valor, _ := strconv.ParseFloat(string(bid[:]), 64)
-	result := float64(valor)
-	return result, nil
+	return string(bid[:]), nil
 }
