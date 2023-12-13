@@ -67,14 +67,6 @@ func BuscaCotacaoHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(cotacao.USDBRL.Bid)
-
-	select {
-	case <-time.After(300 * time.Millisecond):
-		log.Println("Request executado com sucesso")
-
-	case <-ctx.Done():
-		log.Println("Request cancelado pelo cliente")
-	}
 }
 
 func Insert(ctx context.Context, cotacao *Cotacao) error {
@@ -115,7 +107,7 @@ func Insert(ctx context.Context, cotacao *Cotacao) error {
 
 func BuscaCotacao(ctx context.Context) (*Cotacao, error) {
 
-	ctx, cancel := context.WithTimeout(ctx, 200*time.Millisecond)
+	ctx, cancel := context.WithTimeout(ctx, 2000*time.Millisecond)
 	defer cancel()
 
 	req, err := http.NewRequestWithContext(ctx, "GET", "https://economia.awesomeapi.com.br/json/last/USD-BRL", nil)
